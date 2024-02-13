@@ -41,3 +41,20 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy to EC2 instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          #port: ${{ secrets.EC2_PORT }}
+          script: |
+            # Commands to deploy the Docker image on the EC2 instance
+            docker pull jinizacharias/authentiscan:${{ steps.meta.outputs.tags }}
+            docker stop your_container_name || true
+            docker rm your_container_name || true
+            docker run -d --name your_container_name -p 80:80 jinizacharias/authentiscan:${{ steps.meta.outputs.tags }}
+
+
+
