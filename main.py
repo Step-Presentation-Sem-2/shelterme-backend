@@ -12,6 +12,11 @@ from pydantic import BaseModel
 app = FastAPI()
 
 
+async def root():
+    return {"message": "Hello World"}
+
+
+
 async def make_external_request(url, data=None):
     async with httpx.AsyncClient() as client:
         try:
