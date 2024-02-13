@@ -10,8 +10,8 @@
 name: Publish Docker image
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: ['JINI-ZACHARIAS--BACKEND-API']
 
 jobs:
   push_to_registry:
