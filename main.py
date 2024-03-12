@@ -53,13 +53,9 @@ async def generate_ai_image(imageurl: str):
     return {"message": "Fake image generated and model trained successfully", "external_response": external_response.json()}
 
 @app.get("/healthCheck")
-async def health_check():
-    
-    external_url = "/healthCheck"
-    external_response = await make_external_request(external_url)
-
-    
-    return {"internal_status": "Server response: OK - all good", "external_response": external_response.json()}
+async def health_check(response: Response):
+    response.status_code = HTTP_200_OK
+    return {"Healthcheck Success"}
 
 @app.post("/matchImageMeta")
 async def match_image_meta(meta_data: dict):
