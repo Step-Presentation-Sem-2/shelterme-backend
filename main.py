@@ -55,11 +55,11 @@ async def generate_ai_image(imageurl: str):
 @app.get("/healthCheck")
 async def health_check():
     
-    external_url = "/healthCheck"
-    external_response = await make_external_request(external_url)
+   # external_url = "/healthCheck"
+   # external_response = await make_external_request(external_url)
 
     
-    return {"internal_status": "Server response: OK - all good", "external_response": external_response.json()}
+    return {"internal_status": "Server response: OK - all good"}
 
 @app.post("/matchImageMeta")
 async def match_image_meta(meta_data: dict):
