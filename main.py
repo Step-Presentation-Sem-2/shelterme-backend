@@ -1,4 +1,6 @@
-from fastapi import FastAPI, HTTPException
+import os
+from fastapi import FastAPI, HTTPException, File, UploadFile
+from typing import List
 import httpx
 import logging
 
@@ -13,6 +15,30 @@ async def root():
     return {"message": "Hello World"}
 
 
+@app.post("/upload")
+def upload(files: List[UploadFile] = File(...)):
+    try:
+        if os.path.isdir('images') != True:
+            os.mkdir("images")
+        print(os.getcwd())
+    except Exception as e:
+        print(e)
+    
+    for file in files:
+        try:
+            contents = file.file.read()
+            file_name = os.getcwd()+"/images/"+file.filename.replace(" ", "-")
+            print(file_name)
+            with open(file_name, 'wb+') as f:
+                f.write(contents)
+            
+        except Exception as e:
+            print(e)
+            return {"message": "There was an error uploading the file(s)"}
+        finally:
+            file.file.close()
+
+    return {"message": f"Successfully uploaded {[file.filename for file in files]}"}
 
 async def make_external_request(url, data=None):
     async with httpx.AsyncClient() as client:
@@ -50,8 +76,8 @@ async def generate_ai_image(imageurl: str):
     return {"message": "Fake image generated and model trained successfully", "external_response": external_response.json()}
 
 @app.get("/healthCheck")
-async def health_check(response: Response):
-    response.status_code = HTTP_200_OK
+def health_check():
+    # response.status_code = HTTP_200_OK
     return {"Healthcheck Success"}
 
 @app.post("/matchImageMeta")
