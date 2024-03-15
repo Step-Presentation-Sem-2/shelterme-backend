@@ -57,11 +57,13 @@ async def make_external_request(url, data=None):
             raise HTTPException(status_code=exc.response.status_code, detail=f"External request failed: {exc}")
 
 @app.post("/realityCheck")
-async def reality_check(imageurl: str):
+def reality_check(imageurl: str):
     
     external_url = "/realityCheck"
-    external_response = await make_external_request(external_url, {"imageurl": imageurl})
+    # external_response = await make_external_request(external_url, {"imageurl": imageurl})
 
+    # NEED TO UPDATE
+    external_response = null
    
     probability = 0.75  
     return {"internal_probability": probability, "external_response": external_response.json()}
