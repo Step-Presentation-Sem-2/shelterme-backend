@@ -1,8 +1,11 @@
 from fastapi import FastAPI, HTTPException
 import httpx
 import logging
-
+from preprocessingmain import get_image
 from pydantic import BaseModel
+from fastapi import File, UploadFile
+from typing import List
+import shutil
 #from fastapi import HTTPException
 
 
@@ -43,14 +46,17 @@ async def reality_check(imageurl: str):
     probability = 0.75  
     return {"internal_probability": probability, "external_response": external_response.json()}
 
-@app.post("/generateAiImage")
-async def generate_ai_image(imageurl: str):
-    
-    external_url = "/generateAiImage"
-    external_response = await make_external_request(external_url, {"imageurl": imageurl})
+UPLOAD_FOLDER = "C:/Users/jini/Desktop/authentiScan-latest/shelterme-backend/images"
 
+@app.post("/generateAiImage")
+async def generate_ai_image():
+   
+    input_folders = ['scraped_images/scraped_images_b1','scraped_images/ai_generated_images_b1']
+    output_folders = ['preprocessed_images/processed_real_images_b1','preprocessed_images/processed_ai_images_b1']
+    for input_folder, output_folder in zip(input_folders,output_folders):
+        get_image(input_folder,output_folder)
     
-    return {"message": "Fake image generated and model trained successfully", "external_response": external_response.json()}
+    return {"message": "Fake image generated and model trained successfully"}
 
 @app.get("/healthCheck")
 async def health_check():
