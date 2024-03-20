@@ -10,13 +10,10 @@ from typing import List
 import shutil
 #from fastapi import HTTPException
 
-
 app = FastAPI()
-
 
 async def root():
     return {"message": "Hello World"}
-
 
 @app.post("/upload")
 def upload(files: List[UploadFile] = File(...)):
@@ -59,12 +56,16 @@ async def make_external_request(url, data=None):
             
             raise HTTPException(status_code=exc.response.status_code, detail=f"External request failed: {exc}")
 
+# File uploaded is returned to the calling UI
+# This file name needs to be invoked when calling the realitycheck functionality
 @app.post("/realityCheck")
-async def reality_check(imageurl: str):
+def reality_check(imageFileName: str):
     
     external_url = "/realityCheck"
-    external_response = await make_external_request(external_url, {"imageurl": imageurl})
+    # external_response = await make_external_request(external_url, {"imageurl": imageurl})
 
+    # NEED TO UPDATE
+    external_response = null
    
     probability = 0.75  
     return {"internal_probability": probability, "external_response": external_response.json()}
