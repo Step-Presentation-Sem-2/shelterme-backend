@@ -2,6 +2,9 @@ from preprocessing import preprocess_input
 import os
 from PIL import Image
 import numpy as np
+from face_detection import face_detection 
+import argparse
+
 
 
 def get_image(input_directory_path,output_directory_path):
@@ -14,9 +17,16 @@ def get_image(input_directory_path,output_directory_path):
     for filename in os.listdir(input_directory_path):
         if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
             image_path = os.path.join(input_directory_path, filename)
-            image = Image.open(image_path)
+             # Call face_detection function here
+            cropped_face_path=face_detection(image_path, draw_faces_flag=True, conf_score=0.5, show_image=False, 
+                           save_cropped=True, save_uncropped=True, save_image_path=input_directory_path)
+            print("Cropped image:",cropped_face_path)
+            image = Image.open(cropped_face_path)
             # image = image.resize(output_size)     # Load and resize the image
             image_np = np.array(image, dtype=np.float32)
+            
+    
+           
             processed_array = preprocess_input(image_np, data_format= None)
 
             if not os.path.exists(output_directory_path): os.makedirs(output_directory_path)
