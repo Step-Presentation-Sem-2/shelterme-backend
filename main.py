@@ -51,6 +51,7 @@ def face_detection(imageFileName: str):
 
 UPLOAD_FOLDER = "C:/Users/jini/Desktop/authentiScan-latest/shelterme-backend/images"
 '''
+'''
 @app.post("/predictmodel")
 async def predict_model():
    
@@ -65,7 +66,7 @@ async def predict_model():
 def health_check():
     # response.status_code = HTTP_200_OK
     return {"Healthcheck Success"}
-
+'''
 # Run the FastAPI application
 if __name__ == "__main__":
     import uvicorn
