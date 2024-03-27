@@ -14,14 +14,3 @@ typing_extensions==4.9.0
 uvicorn==0.27.0
 requests==2.26.0
 keras==2.15.0
-python-multipart==0.0.5
-numpy
-matplotlib
-pandas
-scikit-learn
-scikit-image
-pydot
-graphviz
-seaborn
-mtcnn
-opencv-python
