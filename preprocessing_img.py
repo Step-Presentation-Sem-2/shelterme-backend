@@ -18,8 +18,8 @@ def get_image(input_directory_path,output_directory_path):
         if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
             image_path = os.path.join(input_directory_path, filename)
              # Call face_detection function here
-            cropped_face_path=face_detection(image_path, draw_faces_flag=True, conf_score=0.5, show_image=False, 
-                           save_cropped=True, save_uncropped=True, save_image_path=input_directory_path)
+            cropped_face_path=face_detection(image_path, draw_faces_flag=False, conf_score=0.9, show_image=False, 
+                           save_cropped=True, save_uncropped=False, save_image_path=input_directory_path)
             print("Cropped image:",cropped_face_path)
             image = Image.open(cropped_face_path)
             # image = image.resize(output_size)     # Load and resize the image

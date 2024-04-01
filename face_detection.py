@@ -90,7 +90,7 @@ def draw_faces(image, faces, image_path, conf_score, show_image=False, save_crop
 
 
 
-def face_detection(image_path, draw_faces_flag, conf_score, show_image, save_cropped, save_uncropped, save_image_path=None):
+def face_detection(image_path, draw_faces_flag, conf_score, show_image, save_cropped, save_uncropped, save_image_path):
     """
     Main function to detect and draw faces on an image.
 
@@ -104,11 +104,13 @@ def face_detection(image_path, draw_faces_flag, conf_score, show_image, save_cro
         save_image_path (str): Path to save the image with drawn faces.
     """
     image, faces = detect_faces(image_path)
+    print("Image: ",image)
+    print("face: ",faces)
     if draw_faces_flag and image is not None:
         croped_img_path= draw_faces(image, faces, image_path, conf_score, show_image, save_cropped, save_uncropped, save_image_path)
         print("line 108: ",croped_img_path)
-    return croped_img_path
-
+        return croped_img_path
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Detect and draw faces on an image.")

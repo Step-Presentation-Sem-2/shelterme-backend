@@ -20,7 +20,7 @@ async def upload(files: List[UploadFile] = File(...)):
     for file in files:
         try:
             contents = await file.read()  # Use await when reading the file asynchronously
-            relative_folder_path = "scraped_images/ai_generated_images_b1"
+            relative_folder_path = "scraped_images"
             os.makedirs(relative_folder_path, exist_ok=True)
             filename = file.filename.replace(" ", "-")
             file_path = os.path.join(relative_folder_path, filename)
@@ -52,12 +52,12 @@ def face_detection(imageFileName: str):
 UPLOAD_FOLDER = "C:/Users/jini/Desktop/authentiScan-latest/shelterme-backend/images"
 '''
 @app.post("/predictmodel")
-async def predict_model():
+async def predict_model(draw_faces: bool = True, conf_score: float =0.9):
    
-    input_folders = ['scraped_images/scraped_images_b1','scraped_images/ai_generated_images_b1']
-    output_folders = ['preprocessed_images/processed_real_images_b1','preprocessed_images/processed_ai_images_b1']
+    input_folders = ['scraped_images']
+    output_folders = ['preprocessed_images']
     for input_folder, output_folder in zip(input_folders,output_folders):
-        get_image(input_folder,output_folder)
+        get_image(input_folder,output_folder,draw_faces,conf_score)
     
     return {"message": "model trained successfully"}
 

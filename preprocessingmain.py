@@ -7,7 +7,7 @@ import argparse
 
 
 
-def get_image(input_directory_path,output_directory_path):
+def get_image(input_directory_path,output_directory_path,draw_face,conf_score):
     """
     Process all images within the specified directory.
     Reads each file or image from the input directory path and then creates the image path
@@ -17,8 +17,10 @@ def get_image(input_directory_path,output_directory_path):
     for filename in os.listdir(input_directory_path):
         if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
             image_path = os.path.join(input_directory_path, filename)
+            print(image_path)
+            
              # Call face_detection function here
-            cropped_face_path=face_detection(image_path, draw_faces_flag=True, conf_score=0.5, show_image=False, 
+            cropped_face_path=face_detection(image_path, draw_face, conf_score, show_image=False, 
                            save_cropped=True, save_uncropped=True, save_image_path=input_directory_path)
             print("Cropped image:",cropped_face_path)
             image = Image.open(cropped_face_path)
