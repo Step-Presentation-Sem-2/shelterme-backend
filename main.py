@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import File, UploadFile
 from typing import List
 from genericPredictions import makeGenericPredictions
+from enums import Questions
 import shutil
 
 # from fastapi import HTTPException
@@ -101,5 +102,11 @@ if __name__ == "__main__":
 # Takes values as 'age', 'gender', 'ethnicity', 'eyeColor', 'wrinkles'
 @app.post("/genericPredictions")
 def genericPredictions(question):
-    makeGenericPredictions(question)
+    try:
+        # Type checking
+        if question not in [member.value for member in Questions] and question not in [member.name for member in Questions]:
+            raise TypeError('question must be an instance of Question Enum')
+        makeGenericPredictions(question)
+    except TypeError as e:
+        return HTTPException(status_code=404, detail=str(e))
     return {"message": "model trained successfully"}
