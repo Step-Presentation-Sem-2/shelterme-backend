@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import File, UploadFile
 from typing import List
+from genericPredictions import makeGenericPredictions
 import shutil
 
 # from fastapi import HTTPException
@@ -98,7 +99,7 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 # Takes values as 'age', 'gender', 'ethnicity', 'eyeColor', 'wrinkles'
-@app.get("/genericPredictions")
+@app.post("/genericPredictions")
 def genericPredictions(question):
-    # response.status_code = HTTP_200_OK
-    return {"Healthcheck Success"}
+    makeGenericPredictions(question)
+    return {"message": "model trained successfully"}

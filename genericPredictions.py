@@ -1,3 +1,4 @@
 
-def genericPredictions(question):
+
+def makeGenericPredictions(question):
     print(question)
