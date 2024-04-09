@@ -9,10 +9,24 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import File, UploadFile
 from typing import List
 import shutil
+from prediction_model import PredictionModel
 
 # from fastapi import HTTPException
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+async def startup_event():
+    print("Application is starting...")
+    predict_model = PredictionModel()
+    predict_model.get_model()
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("Application is shutting down...")
+
 
 origins = ["*"]
 
