@@ -20,8 +20,7 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     print("Application is starting...")
-    PredictionModel()
-    
+    # PredictionModel()
 
 
 @app.on_event("shutdown")
@@ -72,37 +71,39 @@ async def upload(files: List[UploadFile] = File(...)):
             result=print("fake")
     return {"message": "The Image uploaded is : "+result}
 '''
-#This modification reads each uploaded file asynchronously, saves it to a directory, and then calls `get_image` with the file path to obtain the probability. The probabilities are collected into a list and returned along with the success message. Adjust the `conf_score` parameter as needed according to your requirements.
+# This modification reads each uploaded file asynchronously, saves it to a directory, and then calls `get_image` with the file path to obtain the probability. The probabilities are collected into a list and returned along with the success message. Adjust the `conf_score` parameter as needed according to your requirements.
+
+
 @app.post("/upload/")
 async def upload(files: List[UploadFile] = File(...), draw_faces: bool = True, conf_score: float = 0.9):
-    try:
-        all_predictions = []
-        for file in files:
-            contents = await file.read()
-            relative_folder_path = "scraped_images"
-            os.makedirs(relative_folder_path, exist_ok=True)
-            filename = file.filename.replace(" ", "-")
-            file_path = os.path.join(relative_folder_path, filename)
+    # try:
+    all_predictions = []
+    for file in files:
+        contents = await file.read()
+        relative_folder_path = "scraped_images"
+        os.makedirs(relative_folder_path, exist_ok=True)
+        filename = file.filename.replace(" ", "-")
+        file_path = os.path.join(relative_folder_path, filename)
 
-            with open(file_path, "wb+") as f:
-                f.write(contents)
-            print(file_path)
-            
-            # Predictions
-            prediction = predict_model(draw_faces, conf_score)
-            all_predictions.extend(prediction)
+        with open(file_path, "wb+") as f:
+            f.write(contents)
+        print(file_path)
 
-        return {"predictions": all_predictions}
-    except Exception as e:
-        print(e)
-        return JSONResponse(status_code=500, content={"message": "There was an error uploading the file(s)"})
+        # Predictions
+        prediction = predict_model(draw_faces, conf_score)
+        all_predictions.extend(prediction)
+
+    return {"predictions": all_predictions}
+    # except Exception as e:
+    #     print(e)
+    #     return JSONResponse(status_code=500, content={"message": "There was an error uploading the file(s)"})
 
 
 @app.post("/predictmodel")
 async def predict_model(draw_faces: bool = True, conf_score: float = 0.9):
 
-    input_folders = ["scraped_images"]
-    output_folders = ["preprocessed_images"]
+    input_folders = ["/app/scraped_images"]
+    output_folders = ["/app/scraped_images"]
     for input_folder, output_folder in zip(input_folders, output_folders):
         get_image(input_folder, draw_faces, conf_score)
 
@@ -111,12 +112,38 @@ async def predict_model(draw_faces: bool = True, conf_score: float = 0.9):
 
 def predict_model(draw_faces: bool = True, conf_score: float = 0.9):
     all_predictions = []
-    input_folders = 'scraped_images'
-    output_folders = ["preprocessed_images"]
-    #for input_folder, output_folder in zip(input_folders, output_folders):
+    input_folders = "/app/scraped_images"
+    output_folders = "/app/scraped_images"
+    # for input_folder, output_folder in zip(input_folders, output_folders):
     value = get_image(input_folders, draw_faces, conf_score)
-    print("pred",value[0])
-        
+    print("pred", value[0])
+
+@app.post("/cameraupload/")
+async def camera_upload(image: UploadFile = File(...), detect_faces: bool = True, confidence_threshold: float = 0.9):
+    try:
+        # Read the uploaded image content
+        image_content = await image.read()
+
+
+        # Define the directory to store uploaded images
+        images_directory = "uploaded_images"
+        os.makedirs(images_directory, exist_ok=True)
+
+
+        # Construct the file path
+        image_file_name = image.filename
+        image_file_path = os.path.join(images_directory, image_file_name)
+
+
+        # Save the image to the filesystem
+        with open(image_file_path, "wb+") as image_file:
+            image_file.write(image_content)
+
+
+    except Exception as error:
+        print(error)
+        return JSONResponse(status_code=500, content={"message": "An error occurred during the image upload process."})
+
 
 @app.get("/healthCheck")
 def health_check():
