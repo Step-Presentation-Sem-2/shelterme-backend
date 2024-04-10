@@ -20,8 +20,8 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     print("Application is starting...")
-    predict_model = PredictionModel()
-    predict_model.get_model()
+    PredictionModel()
+    
 
 
 @app.on_event("shutdown")
@@ -90,28 +90,12 @@ async def upload(files: List[UploadFile] = File(...), draw_faces: bool = True, c
             
             # Predictions
             prediction = predict_model(draw_faces, conf_score)
-            all_predictions.extend(predictions)
+            all_predictions.extend(prediction)
 
         return {"predictions": all_predictions}
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={"message": "There was an error uploading the file(s)"})
-
-"""   
-@app.post("/facedetection")
-def face_detection(imageFileName: str):
-    
-    external_url = "/realityCheck"
-    # external_response = await make_external_request(external_url, {"imageurl": imageurl})
-
-    # NEED TO UPDATE
-    external_response = null
-   
-    probability = 0.75  
-    return {"internal_probability": probability, "external_response": external_response.json()}
-
-UPLOAD_FOLDER = "C:/Users/jini/Desktop/authentiScan-latest/shelterme-backend/images"
-"""
 
 
 @app.post("/predictmodel")
