@@ -165,3 +165,4 @@ images/
 scraped_images/*
 
 preprocessed_images/*
+*.keras

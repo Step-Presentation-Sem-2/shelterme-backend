@@ -17,7 +17,12 @@ def get_image(input_directory_path,draw_face,conf_score):
     passes the image path with the output size for the resizing and the directory to save the preprocessed images
     """
     predictions = []
+    
     croped_face='cropped_image'
+    for filename in os.listdir(croped_face):
+            file_path = os.path.join(croped_face, filename)
+            if file_path is not None:
+                os.remove(file_path)
     for filename in os.listdir(input_directory_path):
         if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
             image_path = os.path.join(input_directory_path, filename)

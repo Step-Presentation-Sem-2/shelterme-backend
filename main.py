@@ -76,28 +76,33 @@ async def upload(files: List[UploadFile] = File(...)):
 @app.post("/upload/")
 async def upload(files: List[UploadFile] = File(...), draw_faces: bool = True, conf_score: float = 0.9):
     try:
+        # Clear existing files in the directory
+        folder_path = "scraped_images"
+        clean(folder_path)
         all_predictions = []
         for file in files:
             contents = await file.read()
-            relative_folder_path = "scraped_images"
-            os.makedirs(relative_folder_path, exist_ok=True)
             filename = file.filename.replace(" ", "-")
-            file_path = os.path.join(relative_folder_path, filename)
+            file_path = os.path.join(folder_path, filename)
 
-            with open(file_path, "wb+") as f:
+            with open(file_path, "wb") as f:
                 f.write(contents)
             print(file_path)
             
             # Predictions
             prediction = predict_model(draw_faces, conf_score)
+            print("Preed i upload: ",prediction[0])
+            val_prediction=prediction[0]
             all_predictions.extend(prediction)
+            print("All_prediction: ", all_predictions)
+            return_value = float(all_predictions[0][0])
+            print("Return value:",return_value)
 
-        return {"predictions": all_predictions}
+        return {return_value}
     except Exception as e:
         print(e)
-        return JSONResponse(status_code=500, content={"message": "There was an error uploading the file(s)"})
-
-
+        raise HTTPException(status_code=500, detail="There was an error uploading the file(s)")
+'''
 @app.post("/predictmodel")
 async def predict_model(draw_faces: bool = True, conf_score: float = 0.9):
 
@@ -107,8 +112,15 @@ async def predict_model(draw_faces: bool = True, conf_score: float = 0.9):
         get_image(input_folder, draw_faces, conf_score)
 
     return {"message": "model trained successfully"}
+'''
 
 
+def clean(folder_path):
+    for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            if file_path is not None:
+                os.remove(file_path)
+    
 def predict_model(draw_faces: bool = True, conf_score: float = 0.9):
     all_predictions = []
     input_folders = 'scraped_images'
@@ -116,6 +128,7 @@ def predict_model(draw_faces: bool = True, conf_score: float = 0.9):
     #for input_folder, output_folder in zip(input_folders, output_folders):
     value = get_image(input_folders, draw_faces, conf_score)
     print("pred",value[0])
+    return value
         
 
 @app.get("/healthCheck")
