@@ -17,7 +17,7 @@ class PredictionModel:
     def __init__(self):
         # initialize model here
         #model_name ='model_1708578202.keras'
-        model_path = os.path.join(os.getcwd(), "model_1708578202.keras")
+        model_path = os.path.join(os.getcwd(), "final_model.keras")
         self.model = load_model(model_path)
         print('model is initialized')
         
