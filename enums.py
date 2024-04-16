@@ -4,5 +4,5 @@ class Questions(Enum):
     AGE = "age"
     GENDER = "gender"
     ETHNICITY = "ethnicity"
-    EYECOLOR = "eyeColor"
+    EYECOLOR = "eyecolor"
     WRINKLES = "wrinkles"

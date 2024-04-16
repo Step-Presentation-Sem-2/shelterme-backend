@@ -108,7 +108,7 @@ def genericPredictions(question):
         # Type checking
         if question not in [member.value for member in Questions] and question not in [member.name for member in Questions]:
             raise TypeError('question must be an instance of Question Enum')
-        makeGenericPredictions(question)
+        result = makeGenericPredictions(question)
     except TypeError as e:
         return HTTPException(status_code=404, detail=str(e))
-    return {"message": "model trained successfully"}
+    return {"message": result}
