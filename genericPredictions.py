@@ -7,11 +7,16 @@ def makeGenericPredictions(question):
     # model = ViltForQuestionAnswering.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
     # processor = ViltProcessor.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
 
-    inputFolder = 'scraped_images'
-    for filename in os.listdir(inputFolder):
-        if os.path.isfile(os.path.join(inputFolder, filename)):
-            print(filename)
-    test = Image.open("scraped_images/iu-perfect-face-v0-2kawyvlr8y1c1.jpg")
+    folder_path = "scraped_images"
+    for file in files:
+        contents = file.read()
+        filename = file.filename.replace(" ", "-")
+        file_path = os.path.join(folder_path, filename)
+
+        with open(file_path, "wb") as f:
+            f.write(contents)
+        print(file_path)
+        test = Image.open(file_path)
 
     if question == 'AGE' or question == 'age':
         text = f"What is the age of the person in the image?"

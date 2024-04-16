@@ -39,7 +39,9 @@ async def upload(files: List[UploadFile] = File(...)):
                 await file.read()
             )  # Use await when reading the file asynchronously
             relative_folder_path = "scraped_images"
+            
             os.makedirs(relative_folder_path, exist_ok=True)
+            os.remove()
             filename = file.filename.replace(" ", "-")
             file_path = os.path.join(relative_folder_path, filename)
 
