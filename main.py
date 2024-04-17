@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import File, UploadFile
 from typing import List
+from genericPredictions import makeGenericPredictions
+from enums import Questions
 import shutil
 from fastapi.responses import JSONResponse
 from prediction_model import PredictionModel
@@ -96,9 +98,25 @@ def health_check():
     # response.status_code = HTTP_200_OK
     return {"Healthcheck Success"}
 
+def getLatestModelFromS3():
+    relative_folder_path = "model"
+    os.makedirs(relative_folder_path, exist_ok=True)
+    
 
 # Run the FastAPI application
 if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+# Takes values as 'age', 'gender', 'ethnicity', 'eyeColor', 'wrinkles'
+@app.post("/genericPredictions")
+def genericPredictions(question):
+    try:
+        # Type checking
+        if question not in [member.value for member in Questions] and question not in [member.name for member in Questions]:
+            raise TypeError('question must be an instance of Question Enum')
+        result = makeGenericPredictions(question)
+    except TypeError as e:
+        return HTTPException(status_code=404, detail=str(e))
+    return {"message": result}
