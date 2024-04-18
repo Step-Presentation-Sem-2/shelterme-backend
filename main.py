@@ -42,9 +42,9 @@ async def shutdown_event():
 
 
 origins = ["*"]
-
+app.add_middleware(AllowMixedContentMiddleware)
 app.add_middleware(
-    AllowMixedContentMiddleware,
+    # AllowMixedContentMiddleware,
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
