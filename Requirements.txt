@@ -19,8 +19,8 @@ numpy
 jupyter
 matplotlib
 pandas
-scikit-learn
-scikit-image
+#scikit-learn
+#scikit-image
 pydot
 graphviz
 seaborn
