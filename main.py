@@ -13,19 +13,9 @@ from enums import Questions
 import shutil
 from fastapi.responses import JSONResponse
 from prediction_model import PredictionModel
-# from starlette.middleware.base import BaseHTTPMiddleware
-from fastapi import FastAPI, Request
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import Response
 
 # from fastapi import HTTPException
-class AllowMixedContentMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        response: Response = await call_next(request)
-        # This CSP allows images, scripts, AJAX, etc., from any URL (including http)
-        response.headers['Content-Security-Policy'] = "default-src https: http: data: 'unsafe-inline' 'unsafe-eval'"
-        return response
-    
+
 app = FastAPI()
 
 
@@ -42,9 +32,8 @@ async def shutdown_event():
 
 
 origins = ["*"]
-# app.add_middleware(AllowMixedContentMiddleware)
+
 app.add_middleware(
-    # AllowMixedContentMiddleware,
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
