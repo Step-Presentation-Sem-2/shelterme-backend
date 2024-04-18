@@ -13,9 +13,19 @@ from enums import Questions
 import shutil
 from fastapi.responses import JSONResponse
 from prediction_model import PredictionModel
+# from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi import FastAPI, Request
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 
 # from fastapi import HTTPException
-
+class AllowMixedContentMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response: Response = await call_next(request)
+        # This CSP allows images, scripts, AJAX, etc., from any URL (including http)
+        response.headers['Content-Security-Policy'] = "default-src https: http: data: 'unsafe-inline' 'unsafe-eval'"
+        return response
+    
 app = FastAPI()
 
 
@@ -34,6 +44,7 @@ async def shutdown_event():
 origins = ["*"]
 
 app.add_middleware(
+    AllowMixedContentMiddleware,
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
@@ -45,7 +56,10 @@ app.add_middleware(
 async def root():
     return {"message": "Welcome to AuthentiScan"}
 
-#This modification reads each uploaded file asynchronously, saves it to a directory, and then calls `get_image` with the file path to obtain the probability. The probabilities are collected into a list and returned along with the success message. Adjust the `conf_score` parameter as needed according to your requirements.
+#This modification reads each uploaded file asynchronously, saves it to a directory, and 
+# then calls `get_image` with the file path to obtain the probability. The probabilities are 
+# collected into a list and returned along with the success message. Adjust the `conf_score`
+#  parameter as needed according to your requirements.
 @app.post("/upload/")
 async def upload(files: List[UploadFile] = File(...), draw_faces: bool = True, conf_score: float = 0.9):
     try:
@@ -120,3 +134,4 @@ def genericPredictions(question):
     except TypeError as e:
         return HTTPException(status_code=404, detail=str(e))
     return {"message": result}
+
